@@ -23,6 +23,12 @@ npm-debug.log*
 .idea/
 *.swp
 
+# Claude Code local settings
+.claude/settings.local.json
+
+# Root package-lock (no root package.json in this monorepo)
+/package-lock.json
+
 # Test coverage
 coverage/
 
