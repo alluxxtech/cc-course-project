@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CacheModule } from '@nestjs/cache-manager';
 import { BullModule } from '@nestjs/bullmq';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { envValidationSchema } from './config/env.validation.js';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { AuthenticatedGuard } from './auth/guards/authenticated.guard.js';
 
 @Module({
   imports: [
@@ -32,8 +36,10 @@ import { envValidationSchema } from './config/env.validation.js';
         },
       }),
     }),
+    PrismaModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: AuthenticatedGuard }],
 })
 export class AppModule {}

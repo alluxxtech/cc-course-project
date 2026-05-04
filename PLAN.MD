@@ -66,26 +66,26 @@ Status legend: ✅ Done · ⬜ Pending
 ## Phase 3 — Authentication (SSO)
 
 ### 3.1 Backend — Passport.js Setup
-- ⬜ Install `passport`, `@nestjs/passport`, `express-session`, `connect-redis`
-- ⬜ Install `passport-google-oauth20` and `passport-github2` with types
-- ⬜ Create `AuthModule` and `UsersModule`
-- ⬜ Implement `UsersService`: `findOrCreate(provider, providerUserId, profile)` — upsert on first sign-in
-- ⬜ Implement Google OAuth strategy (`passport-google-oauth20`)
-- ⬜ Implement GitHub OAuth strategy (`passport-github2`)
-- ⬜ Implement session serialization / deserialization (`serializeUser`, `deserializeUser`)
-- ⬜ Create auth routes: `GET /auth/google`, `GET /auth/google/callback`, `GET /auth/github`, `GET /auth/github/callback`
-- ⬜ Create `GET /auth/me` — return current user profile
-- ⬜ Create `POST /auth/logout` — destroy session
-- ⬜ Create `AuthGuard` — protect all non-auth endpoints
-- ⬜ Register `AuthGuard` globally, whitelist `/auth/*`
+- ✅ Install `passport`, `@nestjs/passport`, `express-session`, `connect-redis`
+- ✅ Install `passport-google-oauth20` and `passport-github2` with types
+- ✅ Create `AuthModule` and `UsersModule`
+- ✅ Implement `UsersService`: `findOrCreate(provider, providerUserId, profile)` — upsert on first sign-in
+- ✅ Implement Google OAuth strategy (`passport-google-oauth20`)
+- ✅ Implement GitHub OAuth strategy (`passport-github2`)
+- ✅ Implement session serialization / deserialization (`serializeUser`, `deserializeUser`)
+- ✅ Create auth routes: `GET /auth/google`, `GET /auth/google/callback`, `GET /auth/github`, `GET /auth/github/callback`
+- ✅ Create `GET /auth/me` — return current user profile
+- ✅ Create `POST /auth/logout` — destroy session
+- ✅ Create `AuthGuard` — protect all non-auth endpoints
+- ✅ Register `AuthGuard` globally, whitelist `/auth/*`
 
 ### 3.2 Frontend — Auth Flow
-- ⬜ Create login page (`/login`) with "Continue with Google" and "Continue with GitHub" buttons
-- ⬜ Implement auth state via Context or Zustand (current user, loading, logout)
-- ⬜ Fetch `/auth/me` on app load to restore session
-- ⬜ Implement redirect to `/login` if unauthenticated
-- ⬜ Implement redirect to dashboard after successful sign-in
-- ⬜ Implement logout button in navigation
+- ✅ Create login page (`/login`) with "Continue with Google" and "Continue with GitHub" buttons
+- ✅ Implement auth state via Context or Zustand (current user, loading, logout)
+- ✅ Fetch `/auth/me` on app load to restore session
+- ✅ Implement redirect to `/login` if unauthenticated
+- ✅ Implement redirect to dashboard after successful sign-in
+- ✅ Implement logout button in navigation
 
 ---
 

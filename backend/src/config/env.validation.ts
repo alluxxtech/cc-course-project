@@ -20,4 +20,5 @@ export const envValidationSchema = Joi.object({
   GITHUB_CLIENT_SECRET: Joi.string().required(),
 
   FRONTEND_URL: Joi.string().uri().required(),
+  BACKEND_URL: Joi.string().uri().required(),
 });
