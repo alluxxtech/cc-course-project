@@ -11,8 +11,8 @@ Commit current changes. Steps:
 1. **Context** — run `git status`, `git diff`, `git diff --staged`, `git log --oneline -5` in parallel.
 
 2. **Checks** — based on what changed:
-   - `backend/`: `cd backend && npx tsc --noEmit && npm run lint -- --fix && npx prettier --write "src/**/*.ts"`
-   - `frontend/`: `cd frontend && npx tsc --noEmit && npm run lint -- --fix && npx prettier --write "src/**/*.{ts,tsx}"`
+   - `backend/`: `cd backend && ./node_modules/.bin/tsc --noEmit && npm run lint -- --fix && ./node_modules/.bin/prettier --write "src/**/*.ts"`
+   - `frontend/`: `cd frontend && ./node_modules/.bin/tsc --noEmit && npm run lint -- --fix && ./node_modules/.bin/prettier --write "src/**/*.{ts,tsx}"`
    - If `tsc` fails — stop and report errors, do NOT commit.
    - If lint/prettier modified files — re-stage them.
 
