@@ -9,6 +9,9 @@ import { envValidationSchema } from './config/env.validation.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { AuthenticatedGuard } from './auth/guards/authenticated.guard.js';
+import { CategoriesModule } from './categories/categories.module.js';
+import { TransactionsModule } from './transactions/transactions.module.js';
+import { BudgetsModule } from './budgets/budgets.module.js';
 
 @Module({
   imports: [
@@ -24,7 +27,7 @@ import { AuthenticatedGuard } from './auth/guards/authenticated.guard.js';
         store: 'ioredis',
         host: config.get<string>('REDIS_HOST'),
         port: config.get<number>('REDIS_PORT'),
-        ttl: 60,
+        ttl: 60_000,
       }),
     }),
     BullModule.forRootAsync({
@@ -38,6 +41,9 @@ import { AuthenticatedGuard } from './auth/guards/authenticated.guard.js';
     }),
     PrismaModule,
     AuthModule,
+    CategoriesModule,
+    TransactionsModule,
+    BudgetsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: AuthenticatedGuard }],

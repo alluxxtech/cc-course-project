@@ -92,73 +92,74 @@ Status legend: ✅ Done · ⬜ Pending
 ## Phase 4 — Categories
 
 ### 4.1 Backend
-- ⬜ Create `CategoriesModule`, `CategoriesController`, `CategoriesService`
-- ⬜ `POST /categories` — create category (validate unique name per user)
-- ⬜ `GET /categories` — list user's categories
-- ⬜ `PATCH /categories/:id` — rename category (validate ownership + unique name)
-- ⬜ `DELETE /categories/:id` — delete category
-  - ⬜ Implement chosen deletion strategy (block OR reassign to `Uncategorized`)
-  - ⬜ If reassign: auto-create `Uncategorized` on user creation, prevent its deletion
-- ⬜ Authorization: all operations check `category.userId === req.user.id`
+- ✅ Create `CategoriesModule`, `CategoriesController`, `CategoriesService`
+- ✅ `POST /categories` — create category (validate unique name per user)
+- ✅ `GET /categories` — list user's categories
+- ✅ `PATCH /categories/:id` — rename category (validate ownership + unique name)
+- ✅ `DELETE /categories/:id` — delete category
+  - ✅ Implement chosen deletion strategy: **Block** (cannot delete if transactions exist)
+  - ✅ Returns 409 with transaction count in message
+- ✅ Authorization: all operations check `category.userId === req.user.id`
 
 ### 4.2 Frontend
-- ⬜ Create Categories page or modal
-- ⬜ List of user's categories with rename and delete actions
-- ⬜ Create category form with validation (non-empty, duplicate check)
-- ⬜ Empty state: "No categories yet"
-- ⬜ Loading state while fetching
-- ⬜ Error feedback for duplicate name / blocked deletion
+- ✅ Create Categories page (`/categories`)
+- ✅ List of user's categories with inline rename and delete actions
+- ✅ Create category form with validation (non-empty, max 100 chars)
+- ✅ Empty state: "No categories yet"
+- ✅ Loading state while fetching
+- ✅ Error feedback for duplicate name / blocked deletion
+- ✅ Navigation bar with Dashboard / Categories links + user avatar + Sign out
 
 ---
 
 ## Phase 5 — Transactions
 
 ### 5.1 Backend
-- ⬜ Create `TransactionsModule`, `TransactionsController`, `TransactionsService`
-- ⬜ `POST /transactions` — create transaction (validate all fields, check category ownership)
-- ⬜ `GET /transactions` — list user's transactions with query filters:
-  - ⬜ Search by `title` and `notes` (case-insensitive, partial match)
-  - ⬜ Filter by `category_id`
-  - ⬜ Filter by date range (`dateFrom`, `dateTo`), presets: `this_month`, `last_month`
-  - ⬜ Filter by amount range (`amountMin`, `amountMax`)
-- ⬜ `PATCH /transactions/:id` — edit transaction (validate ownership)
-- ⬜ `DELETE /transactions/:id` — delete transaction (validate ownership)
-- ⬜ Authorization: all operations check `transaction.userId === req.user.id`
+- ✅ Create `TransactionsModule`, `TransactionsController`, `TransactionsService`
+- ✅ `POST /transactions` — create transaction (validate all fields, check category ownership)
+- ✅ `GET /transactions` — list user's transactions with query filters:
+  - ✅ Search by `title` and `notes` (case-insensitive, partial match)
+  - ✅ Filter by `category_id`
+  - ✅ Filter by date range (`dateFrom`, `dateTo`), presets: `this_month`, `last_month`
+  - ✅ Filter by amount range (`amountMin`, `amountMax`)
+- ✅ `PATCH /transactions/:id` — edit transaction (validate ownership)
+- ✅ `DELETE /transactions/:id` — delete transaction (validate ownership)
+- ✅ Authorization: all operations check `transaction.userId === req.user.id`
 
 ### 5.2 Frontend
-- ⬜ Create Transactions page
-- ⬜ Transactions list / table with columns: date, title, category, amount, currency, actions
-- ⬜ Search input (debounced)
-- ⬜ Filter controls: category dropdown, date range selector (presets + custom), amount range inputs
-- ⬜ "Add transaction" button
-- ⬜ Create / Edit transaction modal or drawer with form:
-  - ⬜ Fields: title, amount, currency, date, category, notes
-  - ⬜ Client-side validation with error messages
-- ⬜ Delete confirmation
-- ⬜ Empty state: "No transactions" / "No results for this search"
-- ⬜ Loading state
+- ✅ Create Transactions page
+- ✅ Transactions list / table with columns: date, title, category, amount, currency, actions
+- ✅ Search input (debounced)
+- ✅ Filter controls: category dropdown, date range selector (presets + custom), amount range inputs
+- ✅ "Add transaction" button
+- ✅ Create / Edit transaction modal or drawer with form:
+  - ✅ Fields: title, amount, currency, date, category, notes
+  - ✅ Client-side validation with error messages
+- ✅ Delete confirmation
+- ✅ Empty state: "No transactions" / "No results for this search"
+- ✅ Loading state
 
 ---
 
 ## Phase 6 — Monthly Budget
 
 ### 6.1 Backend
-- ⬜ Create `BudgetsModule`, `BudgetsController`, `BudgetsService`
-- ⬜ `PUT /budgets/:year/:month` — set or update budget for the month; invalidate Redis cache
-- ⬜ `GET /budgets/:year/:month` — get budget + calculated metrics (cache result in Redis, TTL 60s):
+- ✅ Create `BudgetsModule`, `BudgetsController`, `BudgetsService`
+- ✅ `PUT /budgets/:year/:month` — set or update budget for the month; invalidate Redis cache
+- ✅ `GET /budgets/:year/:month` — get budget + calculated metrics (cache result in Redis, TTL 60s):
   - Total spent (sum of transactions for the month)
   - Remaining (budget − spent)
   - Usage % (spent / budget × 100)
   - Returns `null` / `{ budgetSet: false }` if no budget configured
-- ⬜ Invalidate budget cache key after any transaction mutation (create / update / delete)
-- ⬜ Authorization: check `budget.userId === req.user.id`
+- ✅ Invalidate budget cache key after any transaction mutation (create / update / delete)
+- ✅ Authorization: check `budget.userId === req.user.id`
 
 ### 6.2 Frontend
-- ⬜ Dashboard page with month selector (default: current month)
-- ⬜ Budget widget showing: total spent, budget amount, remaining, usage % progress bar
-- ⬜ Explicit "No budget set" state with a "Set budget" call to action
-- ⬜ Set / edit budget inline form or modal
-- ⬜ Loading state on the widget
+- ✅ Dashboard page with month selector (default: current month)
+- ✅ Budget widget showing: total spent, budget amount, remaining, usage % progress bar
+- ✅ Explicit "No budget set" state with a "Set budget" call to action
+- ✅ Set / edit budget inline form or modal
+- ✅ Loading state on the widget
 
 ---
 

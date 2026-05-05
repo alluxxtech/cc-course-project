@@ -12,14 +12,22 @@ export async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    throw new Error(`API error ${res.status}: ${res.statusText}`);
+    let message = `API error ${res.status}`;
+    try {
+      const body = (await res.json()) as { message?: unknown };
+      if (typeof body.message === "string") message = body.message;
+      else if (Array.isArray(body.message)) message = body.message.join(", ");
+    } catch {
+      // ignore parse failure, use default message
+    }
+    throw new Error(message);
   }
 
   if (res.status === 204 || res.headers.get("content-length") === "0") {
     return undefined as T;
   }
 
-  return res.json() as Promise<T>;
+  return (await res.json()) as T;
 }
 
 export { BACKEND_URL };
