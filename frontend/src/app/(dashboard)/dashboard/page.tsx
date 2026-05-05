@@ -48,7 +48,11 @@ type SetBudgetFormProps = {
   onCancel: () => void;
 };
 
-function SetBudgetForm({ initialAmount, onSave, onCancel }: SetBudgetFormProps) {
+function SetBudgetForm({
+  initialAmount,
+  onSave,
+  onCancel,
+}: SetBudgetFormProps) {
   const [value, setValue] = useState(initialAmount);
   const [error, setError] = useState<string | undefined>(undefined);
   const [saving, setSaving] = useState(false);
@@ -75,7 +79,10 @@ function SetBudgetForm({ initialAmount, onSave, onCancel }: SetBudgetFormProps) 
   }
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-3">
+    <form
+      onSubmit={(e) => void handleSubmit(e)}
+      className="flex flex-col gap-3"
+    >
       <div className="flex flex-col gap-1">
         <label
           htmlFor="budget-amount"
@@ -97,9 +104,7 @@ function SetBudgetForm({ initialAmount, onSave, onCancel }: SetBudgetFormProps) 
           autoFocus
           className="w-48 rounded-md border border-zinc-200 px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100"
         />
-        {error !== undefined && (
-          <p className="text-sm text-red-600">{error}</p>
-        )}
+        {error !== undefined && <p className="text-sm text-red-600">{error}</p>}
       </div>
       <div className="flex gap-2">
         <button
@@ -303,7 +308,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-md">
-        <BudgetWidget key={`${year}-${month}`} state={state} onSetBudget={setBudget} />
+        <BudgetWidget
+          key={`${year}-${month}`}
+          state={state}
+          onSetBudget={setBudget}
+        />
       </div>
     </main>
   );

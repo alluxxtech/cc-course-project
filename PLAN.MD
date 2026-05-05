@@ -195,13 +195,13 @@ Status legend: ✅ Done · ⬜ Pending
 
 ## Phase 8 — UI Polish
 
-- ⬜ Navigation bar with: logo, links (Dashboard, Transactions, Categories), user avatar, logout
-- ⬜ Consistent spacing and typography across all screens
-- ⬜ Hover and focus states on all interactive elements
-- ⬜ Responsive layout: transactions table → cards on narrow screens
-- ⬜ Light theme — verify consistent across all pages
-- ⬜ 404 page (`not-found.tsx`)
-- ⬜ Global error boundary (`error.tsx` and `global-error.tsx`)
+- ✅ Navigation bar with: logo, links (Dashboard, Transactions, Categories), user avatar, logout
+- ✅ Consistent spacing and typography across all screens
+- ✅ Hover and focus states on all interactive elements
+- ✅ Responsive layout: transactions table → cards on narrow screens
+- ✅ Light theme — verify consistent across all pages
+- ✅ 404 page (`not-found.tsx`)
+- ✅ Global error boundary (`error.tsx` and `global-error.tsx`)
 
 ---
 

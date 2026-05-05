@@ -79,7 +79,9 @@ export default function TransactionsPage() {
         <button
           onClick={() => setModal({ mode: "create" })}
           disabled={categories.length === 0}
-          title={categories.length === 0 ? "Create a category first" : undefined}
+          title={
+            categories.length === 0 ? "Create a category first" : undefined
+          }
           className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           + Add transaction

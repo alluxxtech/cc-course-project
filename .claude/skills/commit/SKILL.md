@@ -20,5 +20,6 @@ Commit current changes. Steps:
 
 4. **Message** — use `$ARGUMENTS` if provided, otherwise derive from diff:
    `<type>: <imperative summary>` (max 72 chars), types: `feat` `fix` `refactor` `test` `docs` `chore` `style`.
+   Never mention Claude, Anthropic, or any AI tool in the commit message. No `Co-Authored-By` trailers.
 
 5. **Commit** — `git commit -m "<message>"`, then show `git log --oneline -3`.
