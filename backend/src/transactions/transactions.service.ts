@@ -3,8 +3,11 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { BudgetsService } from '../budgets/budgets.service.js';
+import { ALERTS_QUEUE, ALERT_JOB_OPTIONS } from '../alerts/alerts.constants.js';
 import type { Prisma, Transaction } from '../generated/prisma/client.js';
 import type { CreateTransactionDto } from './dto/create-transaction.dto.js';
 import type { UpdateTransactionDto } from './dto/update-transaction.dto.js';
@@ -15,6 +18,7 @@ export class TransactionsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly budgetsService: BudgetsService,
+    @InjectQueue(ALERTS_QUEUE) private readonly alertsQueue: Queue,
   ) {}
 
   async findAll(
@@ -96,10 +100,20 @@ export class TransactionsService {
         notes: dto.notes,
       },
     });
+    const createdYear = created.date.getFullYear();
+    const createdMonth = created.date.getMonth() + 1;
     await this.budgetsService.invalidateCache(
       userId,
-      created.date.getFullYear(),
-      created.date.getMonth() + 1,
+      createdYear,
+      createdMonth,
+    );
+    await this.alertsQueue.add(
+      'evaluate-alerts',
+      { userId, year: createdYear, month: createdMonth },
+      {
+        ...ALERT_JOB_OPTIONS,
+        jobId: `alerts-${userId}-${createdYear}-${createdMonth}`,
+      },
     );
     return created;
   }
@@ -145,6 +159,24 @@ export class TransactionsService {
     if (newYear !== oldYear || newMonth !== oldMonth) {
       await this.budgetsService.invalidateCache(userId, newYear, newMonth);
     }
+    await this.alertsQueue.add(
+      'evaluate-alerts',
+      { userId, year: newYear, month: newMonth },
+      {
+        ...ALERT_JOB_OPTIONS,
+        jobId: `alerts-${userId}-${newYear}-${newMonth}`,
+      },
+    );
+    if (newYear !== oldYear || newMonth !== oldMonth) {
+      await this.alertsQueue.add(
+        'evaluate-alerts',
+        { userId, year: oldYear, month: oldMonth },
+        {
+          ...ALERT_JOB_OPTIONS,
+          jobId: `alerts-${userId}-${oldYear}-${oldMonth}`,
+        },
+      );
+    }
 
     return updated;
   }
@@ -157,11 +189,21 @@ export class TransactionsService {
     if (!transaction) throw new NotFoundException('Transaction not found');
     if (transaction.userId !== userId) throw new ForbiddenException();
 
+    const deletedYear = transaction.date.getFullYear();
+    const deletedMonth = transaction.date.getMonth() + 1;
     await this.prisma.transaction.delete({ where: { id } });
     await this.budgetsService.invalidateCache(
       userId,
-      transaction.date.getFullYear(),
-      transaction.date.getMonth() + 1,
+      deletedYear,
+      deletedMonth,
+    );
+    await this.alertsQueue.add(
+      'evaluate-alerts',
+      { userId, year: deletedYear, month: deletedMonth },
+      {
+        ...ALERT_JOB_OPTIONS,
+        jobId: `alerts-${userId}-${deletedYear}-${deletedMonth}`,
+      },
     );
   }
 

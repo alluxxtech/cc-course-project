@@ -166,30 +166,30 @@ Status legend: ✅ Done · ⬜ Pending
 ## Phase 7 — WebSocket Budget Alerts
 
 ### 7.1 Backend
-- ⬜ Install `@nestjs/websockets` and `socket.io` (or `ws`)
-- ⬜ Create `AlertsGateway` with WebSocket namespace `/alerts`
-- ⬜ Authenticate WS connections at handshake (session cookie or JWT)
-- ⬜ On connection open: enqueue `evaluate-alerts` job via BullMQ, send any un-acked alerts
-- ⬜ After transaction create / update / delete: enqueue `evaluate-alerts` job via BullMQ
+- ✅ Install `@nestjs/websockets` and `socket.io` (or `ws`)
+- ✅ Create `AlertsGateway` with WebSocket namespace `/alerts`
+- ✅ Authenticate WS connections at handshake (session cookie or JWT)
+- ✅ On connection open: enqueue `evaluate-alerts` job via BullMQ, send any un-acked alerts
+- ✅ After transaction create / update / delete: enqueue `evaluate-alerts` job via BullMQ
 
 ### 7.2 BullMQ — Alert Queue
-- ⬜ Create `AlertsQueue` (`@nestjs/bullmq`) with queue name `budget-alerts`
-- ⬜ Create `AlertsProcessor` — worker that processes `evaluate-alerts` jobs:
-  - ⬜ Load budget for current month (from Redis cache or DB)
-  - ⬜ Calculate total spent for current month
-  - ⬜ Check `budget_alert_triggers` — skip thresholds already fired this month
-  - ⬜ For each new threshold crossed: insert into `budget_alert_triggers`, emit WS event to user
-  - ⬜ If no budget set for current month — exit without alerts
-- ⬜ Configure job options: `removeOnComplete: true`, `attempts: 3`, `backoff: exponential`
-- ⬜ Handle client `subscribe` message — associate socket with user session
-- ⬜ Handle client `ack` message — mark alert as acknowledged
+- ✅ Create `AlertsQueue` (`@nestjs/bullmq`) with queue name `budget-alerts`
+- ✅ Create `AlertsProcessor` — worker that processes `evaluate-alerts` jobs:
+  - ✅ Load budget for current month (from Redis cache or DB)
+  - ✅ Calculate total spent for current month
+  - ✅ Check `budget_alert_triggers` — skip thresholds already fired this month
+  - ✅ For each new threshold crossed: insert into `budget_alert_triggers`, emit WS event to user
+  - ✅ If no budget set for current month — exit without alerts
+- ✅ Configure job options: `removeOnComplete: true`, `attempts: 3`, `backoff: exponential`
+- ✅ Handle client `subscribe` message — associate socket with user session
+- ✅ Handle client `ack` message — mark alert as acknowledged
 
 ### 7.3 Frontend
-- ⬜ Initialize WebSocket connection after authentication
-- ⬜ Send `subscribe` message on connect
-- ⬜ Handle incoming budget alert events
-- ⬜ Display alerts as toast notifications (or banner / notification panel)
-- ⬜ Send `ack` on dismiss if implementing acknowledgement
+- ✅ Initialize WebSocket connection after authentication
+- ✅ Send `subscribe` message on connect
+- ✅ Handle incoming budget alert events
+- ✅ Display alerts as toast notifications (or banner / notification panel)
+- ✅ Send `ack` on dismiss if implementing acknowledgement
 
 ---
 

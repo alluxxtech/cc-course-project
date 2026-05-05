@@ -12,6 +12,7 @@ import { AuthenticatedGuard } from './auth/guards/authenticated.guard.js';
 import { CategoriesModule } from './categories/categories.module.js';
 import { TransactionsModule } from './transactions/transactions.module.js';
 import { BudgetsModule } from './budgets/budgets.module.js';
+import { AlertsModule } from './alerts/alerts.module.js';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { BudgetsModule } from './budgets/budgets.module.js';
     CategoriesModule,
     TransactionsModule,
     BudgetsModule,
+    AlertsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: AuthenticatedGuard }],

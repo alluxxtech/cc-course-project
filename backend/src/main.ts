@@ -3,10 +3,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import session from 'express-session';
 import passport from 'passport';
+import type { RequestHandler } from 'express';
 import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
 import { AppModule } from './app.module.js';
 import { GlobalExceptionFilter } from './common/filters/http-exception.filter.js';
+import { SessionIoAdapter } from './common/adapters/session-io.adapter.js';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -25,23 +27,36 @@ async function bootstrap(): Promise<void> {
   });
   await redisClient.connect();
 
-  app.use(
-    session({
-      store: new RedisStore({ client: redisClient }),
-      secret: config.getOrThrow<string>('SESSION_SECRET'),
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: config.get<string>('NODE_ENV') === 'production',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      },
-    }),
-  );
+  const sessionMiddleware: RequestHandler = session({
+    store: new RedisStore({ client: redisClient }),
+    secret: config.getOrThrow<string>('SESSION_SECRET'),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: config.get<string>('NODE_ENV') === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  });
 
-  app.use(passport.initialize());
-  app.use(passport.session());
+  const passportInit = passport.initialize() as RequestHandler;
+  const passportSession = passport.session() as RequestHandler;
+
+  app.use(sessionMiddleware);
+  app.use(passportInit);
+  app.use(passportSession);
+
+  const frontendUrl = config.getOrThrow<string>('FRONTEND_URL');
+  app.useWebSocketAdapter(
+    new SessionIoAdapter(
+      app,
+      sessionMiddleware,
+      passportInit,
+      passportSession,
+      frontendUrl,
+    ),
+  );
 
   app.useGlobalPipes(
     new ValidationPipe({

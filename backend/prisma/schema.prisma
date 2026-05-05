@@ -77,12 +77,13 @@ model MonthlyBudget {
 }
 
 model BudgetAlertTrigger {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   userId      String
   year        Int
   month       Int
   threshold   Int
-  triggeredAt DateTime @default(now())
+  triggeredAt DateTime  @default(now())
+  ackedAt     DateTime?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

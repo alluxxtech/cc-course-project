@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AuthGuard } from "../../components/auth-guard";
 import { useAuth } from "../../contexts/auth-context";
+import { AlertsToast } from "./_components/alerts-toast";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex min-h-screen flex-col">
         <Nav />
         <div className="flex flex-1 flex-col">{children}</div>
+        <AlertsToast />
       </div>
     </AuthGuard>
   );
