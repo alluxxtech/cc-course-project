@@ -229,15 +229,15 @@ Status legend: ✅ Done · ⬜ Pending
 
 ## Phase 10 — README & Docs
 
-- ⬜ Document how to run backend locally
-- ⬜ Document how to run frontend locally
-- ⬜ Document how to run tests
-- ⬜ Write short API reference (endpoints, request/response shapes)
-- ⬜ Document category deletion behavior choice + rationale
-- ⬜ Document Google OAuth setup (credentials, redirect URIs)
-- ⬜ Document GitHub OAuth setup (credentials, callback URL)
-- ⬜ Document WebSocket message format and budget alert rules
-- ⬜ List all required environment variables with descriptions
+- ✅ Document how to run backend locally
+- ✅ Document how to run frontend locally
+- ✅ Document how to run tests
+- ✅ Write short API reference (endpoints, request/response shapes)
+- ✅ Document category deletion behavior choice + rationale
+- ✅ Document Google OAuth setup (credentials, redirect URIs)
+- ✅ Document GitHub OAuth setup (credentials, callback URL)
+- ✅ Document WebSocket message format and budget alert rules
+- ✅ List all required environment variables with descriptions
 
 ---
 
