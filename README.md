@@ -2,6 +2,15 @@
 
 A full-stack web application for tracking personal expenses. Users manage transactions by category, set monthly budgets, and receive real-time WebSocket alerts when spending crosses threshold values (50%, 80%, 100%).
 
+## Two ways to run
+
+| Option | When to use |
+| ------ | ----------- |
+| [Running Locally](#running-locally) | Active development — hot reload, easy debugging |
+| [Docker Compose (full stack)](#running-with-docker-compose-full-stack) | Quick demo or production-like environment |
+
+---
+
 ## Tech Stack
 
 - **Frontend:** Next.js (React), TypeScript, Tailwind CSS
@@ -33,7 +42,7 @@ colima start --memory 2
 Then bring up PostgreSQL and Redis:
 
 ```bash
-docker compose up -d
+docker compose up -d postgres redis
 ```
 
 Verify both are up:
@@ -97,6 +106,51 @@ colima stop           # stop the VM (frees ~2 GB RAM)
 
 ---
 
+## Running with Docker Compose (full stack)
+
+This option runs the entire stack — PostgreSQL, Redis, backend, and frontend — in containers.
+
+### Prerequisites
+
+- Docker (or Colima + Docker CLI on macOS)
+- A `.env` file in the project root with OAuth credentials and session secret (see [Environment Variables](#environment-variables))
+
+### Step 1 — Create root `.env`
+
+Create a `.env` file in the project root (next to `docker-compose.yml`) with the OAuth secrets:
+
+```env
+SESSION_SECRET=your_random_32_char_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+```
+
+### Step 2 — Build and start
+
+```bash
+docker compose up --build
+```
+
+This will:
+1. Build the backend image (compiles TypeScript, installs production deps)
+2. Build the frontend image (runs `next build` with `NEXT_PUBLIC_BACKEND_URL=http://localhost:3001`)
+3. Start PostgreSQL and Redis
+4. Run Prisma migrations automatically before the backend starts
+5. Serve the frontend on **http://localhost:3000** and the backend API on **http://localhost:3001**
+
+### Step 3 — Stop
+
+```bash
+docker compose down          # stop containers, keep volumes
+docker compose down -v       # stop and delete all data volumes
+```
+
+> **OAuth redirect URIs for Docker:** Use the same `http://localhost:3001/auth/google/callback` and `http://localhost:3001/auth/github/callback` URIs as for local development — the backend is still exposed on port 3001.
+
+---
+
 ### Running tests
 
 ```bash
@@ -120,7 +174,7 @@ All required variables are listed in `backend/.env.example`.
 | `GITHUB_CLIENT_ID`     | GitHub OAuth client ID                         |
 | `GITHUB_CLIENT_SECRET` | GitHub OAuth client secret                     |
 | `SESSION_SECRET`       | Random secret for session signing              |
-| `FRONTEND_URL`         | Frontend origin (e.g. `http://localhost:3001`) |
+| `FRONTEND_URL`         | Frontend origin (e.g. `http://localhost:3000`) |
 
 ---
 

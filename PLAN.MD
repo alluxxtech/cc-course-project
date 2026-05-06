@@ -243,8 +243,8 @@ Status legend: ✅ Done · ⬜ Pending
 
 ## Phase 11 — Docker (Optional)
 
-- ⬜ `Dockerfile` for backend
-- ⬜ `Dockerfile` for frontend
-- ⬜ `docker-compose.yml` — backend + frontend + PostgreSQL
-- ⬜ Verify full stack starts with `docker compose up`
-- ⬜ Document Docker setup in README
+- ✅ `Dockerfile` for backend
+- ✅ `Dockerfile` for frontend
+- ✅ `docker-compose.yml` — backend + frontend + PostgreSQL
+- ✅ Verify full stack starts with `docker compose up`
+- ✅ Document Docker setup in README
