@@ -1,6 +1,7 @@
 ---
 name: review
 description: Run the project code-reviewer agent on recent changes
+model: claude-sonnet-4-6
 argument-hint: "[phase name, e.g. 'Phase 7.1 — Alerts Backend']"
 context:
   - .claude/rules/frontend.md

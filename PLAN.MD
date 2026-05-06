@@ -208,22 +208,22 @@ Status legend: ✅ Done · ⬜ Pending
 ## Phase 9 — Tests
 
 ### 9.1 Backend (Jest)
-- ⬜ Set up test database (separate DB or in-memory mock)
-- ⬜ Mock BullMQ queues in tests (replace with inline synchronous execution via `@nestjs/bullmq` test utils)
-- ⬜ Mock Redis cache in tests (in-memory store or `jest.mock`)
-- ⬜ Test 1: SSO login success path — mock provider response, verify user record created in DB
-- ⬜ Test 2: Create category — happy path + duplicate name returns error
-- ⬜ Test 3: Create transaction — happy path + validation errors
-- ⬜ Test 4: Authorization — user A cannot GET/PATCH/DELETE user B's categories, transactions, budgets
-- ⬜ Test 5: WebSocket alert at 50% — add transactions to hit 50%, verify alert sent once
-- ⬜ Test 6: WebSocket alert at 80% — same pattern
-- ⬜ Test 7: WebSocket alert at 100% — same pattern
-- ⬜ Verify no real Google / GitHub network calls in any test
+- ✅ Set up test database (separate DB or in-memory mock)
+- ✅ Mock BullMQ queues in tests (replace with inline synchronous execution via `@nestjs/bullmq` test utils)
+- ✅ Mock Redis cache in tests (in-memory store or `jest.mock`)
+- ✅ Test 1: SSO login success path — mock provider response, verify user record created in DB
+- ✅ Test 2: Create category — happy path + duplicate name returns error
+- ✅ Test 3: Create transaction — happy path + validation errors
+- ✅ Test 4: Authorization — user A cannot GET/PATCH/DELETE user B's categories, transactions, budgets
+- ✅ Test 5: WebSocket alert at 50% — add transactions to hit 50%, verify alert sent once
+- ✅ Test 6: WebSocket alert at 80% — same pattern
+- ✅ Test 7: WebSocket alert at 100% — same pattern
+- ✅ Verify no real Google / GitHub network calls in any test
 
 ### 9.2 Frontend (React Testing Library) — optional but recommended
-- ⬜ Login page renders both OAuth buttons
-- ⬜ Transaction form validates and shows errors
-- ⬜ Empty states render correctly
+- ✅ Login page renders both OAuth buttons
+- ✅ Transaction form validates and shows errors
+- ✅ Empty states render correctly
 
 ---
 
