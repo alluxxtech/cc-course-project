@@ -7,7 +7,7 @@ import { PrismaService } from '../prisma/prisma.service.js';
 import { BudgetsService } from '../budgets/budgets.service.js';
 import { ALERTS_QUEUE } from '../alerts/alerts.constants.js';
 
-type AnyFn = jest.Mock<() => Promise<any>>;
+type AnyFn = jest.Mock<() => Promise<unknown>>;
 
 const USER_A = 'user-a';
 const USER_B = 'user-b';
@@ -51,23 +51,23 @@ describe('TransactionsService', () => {
 
   beforeEach(async () => {
     prisma = {
-      category: { findUnique: jest.fn<() => Promise<any>>() },
+      category: { findUnique: jest.fn<() => Promise<unknown>>() },
       transaction: {
-        findUnique: jest.fn<() => Promise<any>>(),
-        findMany: jest.fn<() => Promise<any>>(),
-        create: jest.fn<() => Promise<any>>(),
-        update: jest.fn<() => Promise<any>>(),
-        delete: jest.fn<() => Promise<any>>(),
-        aggregate: jest.fn<() => Promise<any>>(),
+        findUnique: jest.fn<() => Promise<unknown>>(),
+        findMany: jest.fn<() => Promise<unknown>>(),
+        create: jest.fn<() => Promise<unknown>>(),
+        update: jest.fn<() => Promise<unknown>>(),
+        delete: jest.fn<() => Promise<unknown>>(),
+        aggregate: jest.fn<() => Promise<unknown>>(),
       },
     };
 
     mockQueue = {
-      add: jest.fn<() => Promise<any>>().mockResolvedValue(undefined),
+      add: jest.fn<() => Promise<unknown>>().mockResolvedValue(undefined),
     };
     mockBudgetsService = {
       invalidateCache: jest
-        .fn<() => Promise<any>>()
+        .fn<() => Promise<unknown>>()
         .mockResolvedValue(undefined),
     };
 
@@ -107,7 +107,7 @@ describe('TransactionsService', () => {
             title: 'Lunch',
             amount: 25.5,
             currency: 'USD',
-          }),
+          }) as unknown,
         }),
       );
       expect(mockBudgetsService.invalidateCache).toHaveBeenCalledWith(

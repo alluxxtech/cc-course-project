@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
-type AnyFn = jest.Mock<() => Promise<any>>;
+type AnyFn = jest.Mock<() => Promise<unknown>>;
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -12,8 +12,8 @@ describe('UsersService', () => {
   beforeEach(async () => {
     prisma = {
       user: {
-        upsert: jest.fn<() => Promise<any>>(),
-        findUnique: jest.fn<() => Promise<any>>(),
+        upsert: jest.fn<() => Promise<unknown>>(),
+        findUnique: jest.fn<() => Promise<unknown>>(),
       },
     };
 

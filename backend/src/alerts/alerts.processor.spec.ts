@@ -6,7 +6,7 @@ import { BudgetsService } from '../budgets/budgets.service.js';
 import { AlertsGateway } from './alerts.gateway.js';
 import { Prisma } from '../generated/prisma/client.js';
 
-type AnyFn = jest.Mock<() => Promise<any>>;
+type AnyFn = jest.Mock<() => Promise<unknown>>;
 
 type JobData = {
   userId: string;
@@ -30,11 +30,11 @@ describe('AlertsProcessor', () => {
   beforeEach(() => {
     mockPrisma = {
       budgetAlertTrigger: {
-        findMany: jest.fn<() => Promise<any>>(),
-        create: jest.fn<() => Promise<any>>().mockResolvedValue({}),
+        findMany: jest.fn<() => Promise<unknown>>(),
+        create: jest.fn<() => Promise<unknown>>().mockResolvedValue({}),
       },
     };
-    mockBudgetsService = { get: jest.fn<() => Promise<any>>() };
+    mockBudgetsService = { get: jest.fn<() => Promise<unknown>>() };
     mockGateway = { emitToUser: jest.fn<() => void>() };
 
     processor = new AlertsProcessor(
@@ -42,6 +42,34 @@ describe('AlertsProcessor', () => {
       mockBudgetsService as unknown as BudgetsService,
       mockGateway as unknown as AlertsGateway,
     );
+  });
+
+  describe('process — isReconnect path', () => {
+    it('re-emits unacked alerts to the user on reconnect', async () => {
+      mockPrisma.budgetAlertTrigger.findMany.mockResolvedValueOnce([
+        { threshold: 50 },
+        { threshold: 80 },
+      ]);
+
+      await processor.process(makeJob({ ...JOB_DATA, isReconnect: true }));
+
+      expect(mockPrisma.budgetAlertTrigger.findMany).toHaveBeenCalledWith({
+        where: { userId: 'user-1', year: 2025, month: 5, ackedAt: null },
+      });
+      expect(mockGateway.emitToUser).toHaveBeenCalledTimes(2);
+      expect(mockGateway.emitToUser).toHaveBeenCalledWith('user-1', 50);
+      expect(mockGateway.emitToUser).toHaveBeenCalledWith('user-1', 80);
+      expect(mockPrisma.budgetAlertTrigger.create).not.toHaveBeenCalled();
+    });
+
+    it('emits nothing on reconnect when all alerts have been acknowledged', async () => {
+      mockPrisma.budgetAlertTrigger.findMany.mockResolvedValueOnce([]);
+
+      await processor.process(makeJob({ ...JOB_DATA, isReconnect: true }));
+
+      expect(mockGateway.emitToUser).not.toHaveBeenCalled();
+      expect(mockPrisma.budgetAlertTrigger.create).not.toHaveBeenCalled();
+    });
   });
 
   describe('process — budget threshold alerts', () => {

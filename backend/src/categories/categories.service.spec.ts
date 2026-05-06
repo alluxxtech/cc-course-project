@@ -8,7 +8,7 @@ import {
 import { CategoriesService } from './categories.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
-type AnyFn = jest.Mock<() => Promise<any>>;
+type AnyFn = jest.Mock<() => Promise<unknown>>;
 
 const USER_A = 'user-a';
 const USER_B = 'user-b';
@@ -36,11 +36,11 @@ describe('CategoriesService', () => {
   beforeEach(async () => {
     prisma = {
       category: {
-        findUnique: jest.fn<() => Promise<any>>(),
-        findMany: jest.fn<() => Promise<any>>(),
-        create: jest.fn<() => Promise<any>>(),
-        update: jest.fn<() => Promise<any>>(),
-        delete: jest.fn<() => Promise<any>>(),
+        findUnique: jest.fn<() => Promise<unknown>>(),
+        findMany: jest.fn<() => Promise<unknown>>(),
+        create: jest.fn<() => Promise<unknown>>(),
+        update: jest.fn<() => Promise<unknown>>(),
+        delete: jest.fn<() => Promise<unknown>>(),
       },
     };
 

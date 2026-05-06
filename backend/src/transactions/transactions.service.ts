@@ -42,16 +42,20 @@ export class TransactionsService {
       const now = new Date();
       if (query.preset === 'this_month') {
         where.date = {
-          gte: new Date(now.getFullYear(), now.getMonth(), 1),
-          lt: new Date(now.getFullYear(), now.getMonth() + 1, 1),
+          gte: new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1)),
+          lt: new Date(
+            Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1),
+          ),
         };
       } else {
         const year =
-          now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
-        const month = now.getMonth() === 0 ? 11 : now.getMonth() - 1;
+          now.getUTCMonth() === 0
+            ? now.getUTCFullYear() - 1
+            : now.getUTCFullYear();
+        const month = now.getUTCMonth() === 0 ? 11 : now.getUTCMonth() - 1;
         where.date = {
-          gte: new Date(year, month, 1),
-          lt: new Date(year, month + 1, 1),
+          gte: new Date(Date.UTC(year, month, 1)),
+          lt: new Date(Date.UTC(year, month + 1, 1)),
         };
       }
     } else if (query.dateFrom !== undefined || query.dateTo !== undefined) {
@@ -112,7 +116,7 @@ export class TransactionsService {
       { userId, year: createdYear, month: createdMonth },
       {
         ...ALERT_JOB_OPTIONS,
-        jobId: `alerts-${userId}-${createdYear}-${createdMonth}`,
+        jobId: `alerts-eval-${userId}-${createdYear}-${createdMonth}`,
       },
     );
     return created;
@@ -164,7 +168,7 @@ export class TransactionsService {
       { userId, year: newYear, month: newMonth },
       {
         ...ALERT_JOB_OPTIONS,
-        jobId: `alerts-${userId}-${newYear}-${newMonth}`,
+        jobId: `alerts-eval-${userId}-${newYear}-${newMonth}`,
       },
     );
     if (newYear !== oldYear || newMonth !== oldMonth) {
@@ -173,7 +177,7 @@ export class TransactionsService {
         { userId, year: oldYear, month: oldMonth },
         {
           ...ALERT_JOB_OPTIONS,
-          jobId: `alerts-${userId}-${oldYear}-${oldMonth}`,
+          jobId: `alerts-eval-${userId}-${oldYear}-${oldMonth}`,
         },
       );
     }
@@ -202,7 +206,7 @@ export class TransactionsService {
       { userId, year: deletedYear, month: deletedMonth },
       {
         ...ALERT_JOB_OPTIONS,
-        jobId: `alerts-${userId}-${deletedYear}-${deletedMonth}`,
+        jobId: `alerts-eval-${userId}-${deletedYear}-${deletedMonth}`,
       },
     );
   }

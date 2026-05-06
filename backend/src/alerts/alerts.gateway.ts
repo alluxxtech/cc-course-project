@@ -5,6 +5,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
+import { Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import type { Server, Socket } from 'socket.io';
@@ -26,10 +27,18 @@ export class AlertsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server!: Server;
 
+  private readonly logger = new Logger(AlertsGateway.name);
+
   constructor(
     @InjectQueue(ALERTS_QUEUE) private readonly queue: Queue,
     private readonly prisma: PrismaService,
   ) {}
+
+  private getUserId(client: Socket): string | undefined {
+    return (client.data as Record<string, unknown>).userId as
+      | string
+      | undefined;
+  }
 
   async handleConnection(client: Socket): Promise<void> {
     const req = client.request as Request;
@@ -47,25 +56,28 @@ export class AlertsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('subscribe')
   async handleSubscribe(client: Socket): Promise<void> {
-    const userId = (client.data as Record<string, unknown>).userId as
-      | string
-      | undefined;
+    const userId = this.getUserId(client);
     if (!userId) return;
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
-    await this.queue.add(
-      'evaluate-alerts',
-      { userId, year, month, isReconnect: true },
-      { ...ALERT_JOB_OPTIONS, jobId: `alerts-${userId}-${year}-${month}` },
-    );
+    try {
+      await this.queue.add(
+        'evaluate-alerts',
+        { userId, year, month, isReconnect: true },
+        {
+          ...ALERT_JOB_OPTIONS,
+          jobId: `alerts-reconnect-${userId}-${year}-${month}`,
+        },
+      );
+    } catch (err) {
+      this.logger.error('Failed to enqueue reconnect alert job', err);
+    }
   }
 
   @SubscribeMessage('ack')
   async handleAck(client: Socket, payload: unknown): Promise<void> {
-    const userId = (client.data as Record<string, unknown>).userId as
-      | string
-      | undefined;
+    const userId = this.getUserId(client);
     if (!userId) return;
 
     if (
@@ -81,10 +93,14 @@ export class AlertsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const year = now.getFullYear();
     const month = now.getMonth() + 1;
 
-    await this.prisma.budgetAlertTrigger.updateMany({
-      where: { userId, year, month, threshold, ackedAt: null },
-      data: { ackedAt: new Date() },
-    });
+    try {
+      await this.prisma.budgetAlertTrigger.updateMany({
+        where: { userId, year, month, threshold, ackedAt: null },
+        data: { ackedAt: new Date() },
+      });
+    } catch (err) {
+      this.logger.error('Failed to acknowledge budget alert', err);
+    }
   }
 
   emitToUser(userId: string, threshold: number): void {
